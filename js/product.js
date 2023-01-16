@@ -1,7 +1,9 @@
 const queryString = window.location.search
 const urlParams = new URLSearchParams(queryString)
 const id = urlParams.get("id")
-console.log({ id })
+if (id != null){
+   let itemPrice = 0 
+}
 
 fetch(`http://localhost:3000/api/products/${id}`)
 
@@ -11,6 +13,7 @@ fetch(`http://localhost:3000/api/products/${id}`)
 function handleData( duck) {
     console.log({ duck })
     const { altText, colors, description, imageUrl, name, price, _id } =duck
+    itemPrice = price
     makeImage(imageUrl, altText)
     maketitle(name)
     makePice(price)
@@ -47,4 +50,24 @@ function makeColors(colors){
             select.appendChild(option)
         })
     }
+}
+
+const button = document.querySelector("#addToCart")
+if (button != null){
+    button.addEventListener("click", (e) => {
+        const colors = document.querySelector("#colors").value
+        const quantity = document.querySelector("#quantity").value
+        if (colors  == null || colors === "" || quantity == null || quantity == 0){
+            alert("plaese select a color and quantity")
+        }
+        const data = {
+            id: id,
+            quantity:  Number(quantity),
+            colors: colors,
+            price: itemPrice,
+
+        }
+        localStorage.setItem(id, JSON.stringify(data))
+        window.location.href = "cart.html"
+    })
 }
